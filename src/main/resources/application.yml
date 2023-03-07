@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      database: productsdb
+      host: localhost
+      port: 27017
+      username: test
+      password: test
+      auto-index-creation: true
+      authentication-database: admin
+server:
+  port: 8080
+#  By Default the error message is not printed on console and also not included into the API response
+  error:
+    include-message: always
