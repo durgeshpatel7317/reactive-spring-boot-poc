@@ -20,80 +20,80 @@ import java.util.UUID;
 @WebFluxTest(ProductController.class)
 class DemoApplicationTests {
 
-	@Autowired
-	private WebTestClient webTestClient;
+    @Autowired
+    private WebTestClient webTestClient;
 
-	@MockBean
-	private ProductService productService;
+    @MockBean
+    private ProductService productService;
 
-	String id1 = UUID.randomUUID().toString();
-	String id2 = UUID.randomUUID().toString();
+    String id1 = UUID.randomUUID().toString();
+    String id2 = UUID.randomUUID().toString();
 
-	@Test
-	public void addProductTest() {
-		Mono<ProductDto> dtoMono = Mono.just(
-			ProductDto.builder()
-					.id(UUID.randomUUID().toString())
-					.qty(2)
-					.price(15000.0)
-					.name("Shoes")
-					.build()
-		);
-		// Mocking the service layer
-		Mockito.when(productService.saveProduct(dtoMono)).thenReturn(dtoMono);
-		// Testing the APIs
-		Flux<ProductDto> productDtoFlux = webTestClient.post().uri("/products/")
-				.body(dtoMono, ProductDto.class)
-				.exchange()
-				.expectStatus().is2xxSuccessful()
-				.returnResult(ProductDto.class)
-				.getResponseBody();
+    @Test
+    public void addProductTest() {
+        Mono<ProductDto> dtoMono = Mono.just(
+            ProductDto.builder()
+                .id(UUID.randomUUID().toString())
+                .qty(2)
+                .price(15000.0)
+                .name("Shoes")
+                .build()
+        );
+        // Mocking the service layer
+        Mockito.when(productService.saveProduct(dtoMono)).thenReturn(dtoMono);
+        // Testing the APIs
+        Flux<ProductDto> productDtoFlux = webTestClient.post().uri("/products/")
+            .body(dtoMono, ProductDto.class)
+            .exchange()
+            .expectStatus().is2xxSuccessful()
+            .returnResult(ProductDto.class)
+            .getResponseBody();
 
-		productDtoFlux.subscribe(e -> System.out.println("Value of return is " + e));
-	}
+        productDtoFlux.subscribe(e -> System.out.println("Value of return is " + e));
+    }
 
-	@Test
-	public void getProductTest() {
-		Flux<ProductDto> dtoFlux = Flux.just(
-				ProductDto.builder()
-						.id(id1)
-						.qty(2)
-						.price(15000.0)
-						.name("Shoes")
-						.build(),
-				ProductDto.builder()
-						.id(id2)
-						.qty(2)
-						.price(15000.0)
-						.name("Laptops")
-						.build()
-		);
-		// Mocking the service layer
-		Mockito.when(productService.getProducts()).thenReturn(dtoFlux);
-		// Testing the APIs
-		Flux<ProductDto> response = webTestClient.get().uri("/products/")
-				.exchange()
-				.expectStatus().is2xxSuccessful()
-				.returnResult(ProductDto.class)
-				.getResponseBody();
+    @Test
+    public void getProductTest() {
+        Flux<ProductDto> dtoFlux = Flux.just(
+            ProductDto.builder()
+                .id(id1)
+                .qty(2)
+                .price(15000.0)
+                .name("Shoes")
+                .build(),
+            ProductDto.builder()
+                .id(id2)
+                .qty(2)
+                .price(15000.0)
+                .name("Laptops")
+                .build()
+        );
+        // Mocking the service layer
+        Mockito.when(productService.getProducts()).thenReturn(dtoFlux);
+        // Testing the APIs
+        Flux<ProductDto> response = webTestClient.get().uri("/products/")
+            .exchange()
+            .expectStatus().is2xxSuccessful()
+            .returnResult(ProductDto.class)
+            .getResponseBody();
 
-		StepVerifier.create(response)
-				.expectSubscription()
-				// Used to verify the object returned from DB
-				.expectNext(ProductDto.builder()
-						.id(id1)
-						.qty(2)
-						.price(15000.0)
-						.name("Shoes")
-						.build()
-				)
-				.expectNext(ProductDto.builder()
-						.id(id2)
-						.qty(2)
-						.price(15000.0)
-						.name("Laptops")
-						.build()
-				)
-				.verifyComplete();
-	}
+        StepVerifier.create(response)
+            .expectSubscription()
+            // Used to verify the object returned from DB
+            .expectNext(ProductDto.builder()
+                .id(id1)
+                .qty(2)
+                .price(15000.0)
+                .name("Shoes")
+                .build()
+            )
+            .expectNext(ProductDto.builder()
+                .id(id2)
+                .qty(2)
+                .price(15000.0)
+                .name("Laptops")
+                .build()
+            )
+            .verifyComplete();
+    }
 }

@@ -30,8 +30,8 @@ public class ProductService {
 
     public Flux<ProductDto> getProductInRange(Double min, Double max) {
         return productRepo.findByPriceBetween(Range.closed(min, max))
-                .onBackpressureBuffer(5)
-                .map(AppUtils::entityToDto);
+            .onBackpressureBuffer(5)
+            .map(AppUtils::entityToDto);
 
 //        resp.subscribe(new CustomSubscriber<>());
 
@@ -40,16 +40,16 @@ public class ProductService {
 
     public Mono<ProductDto> saveProduct(Mono<ProductDto> productDtoMono) {
         return productDtoMono.map(AppUtils::dtoToEntity)
-                .flatMap(productRepo::insert)
-                .map(AppUtils::entityToDto);
+            .flatMap(productRepo::insert)
+            .map(AppUtils::entityToDto);
     }
 
     public Mono<ProductDto> updateProduct(Mono<ProductDto> productDtoMono, String id) {
         return productRepo.findById(id)
-                .flatMap(p -> productDtoMono.map(AppUtils::dtoToEntity))
-                .doOnNext(e -> e.setId(id))
-                .flatMap(productRepo::save)
-                .map(AppUtils::entityToDto);
+            .flatMap(p -> productDtoMono.map(AppUtils::dtoToEntity))
+            .doOnNext(e -> e.setId(id))
+            .flatMap(productRepo::save)
+            .map(AppUtils::entityToDto);
 
     }
 

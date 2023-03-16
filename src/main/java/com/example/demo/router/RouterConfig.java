@@ -21,8 +21,8 @@ public class RouterConfig {
 
     @Autowired
     public RouterConfig(
-            CustomerHandler customerHandler, CustomerStreamHandler customerStreamHandler,
-            ProductHandler productHandler, FileHandler fileHandler
+        CustomerHandler customerHandler, CustomerStreamHandler customerStreamHandler,
+        ProductHandler productHandler, FileHandler fileHandler
     ) {
         this.customerHandler = customerHandler;
         this.customerStreamHandler = customerStreamHandler;
@@ -34,27 +34,27 @@ public class RouterConfig {
     // A Replacement of RestController and RequestMapping
     public RouterFunction<ServerResponse> customerRouteFunction() {
         return RouterFunctions.route()
-                .GET("/router/customers", customerHandler::loadCustomers)
-                .GET("/router/customers/stream", customerStreamHandler::loadCustomers)
-                .GET("/router/customer/{input}", customerHandler::findCustomer)
-                .POST("/router/customers/save", customerHandler::saveCustomer)
-                .build();
+            .GET("/router/customers", customerHandler::loadCustomers)
+            .GET("/router/customers/stream", customerStreamHandler::loadCustomers)
+            .GET("/router/customer/{input}", customerHandler::findCustomer)
+            .POST("/router/customers/save", customerHandler::saveCustomer)
+            .build();
     }
 
     @Bean
     // A Replacement of RestController and RequestMapping
     public RouterFunction<ServerResponse> productRouteFunction() {
         return RouterFunctions.route()
-                .GET("/router/products/{id}", productHandler::getProductById)
-                .build();
+            .GET("/router/products/{id}", productHandler::getProductById)
+            .build();
     }
 
 
     @Bean
     public RouterFunction<ServerResponse> fileRouterFunction() {
         return RouterFunctions.route()
-                .GET("/router/file/posts", fileHandler::getDataFromJsonFile)
-                .POST("/router/file/posts", fileHandler::writeDateToFile)
-                .build();
+            .GET("/router/file/posts", fileHandler::getDataFromJsonFile)
+            .POST("/router/file/posts", fileHandler::writeDateToFile)
+            .build();
     }
 }

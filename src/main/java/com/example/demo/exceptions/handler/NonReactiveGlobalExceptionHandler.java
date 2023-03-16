@@ -17,6 +17,6 @@ public class NonReactiveGlobalExceptionHandler {
         log.error(ex.getMessage());
 
         return ResponseEntity.badRequest()
-                .body(Map.of("error", ex.getMessage(), "status", HttpStatus.BAD_REQUEST.toString()));
+            .body(Map.of("error", ex.getMessage(), "status", HttpStatus.BAD_REQUEST.toString()));
     }
 }

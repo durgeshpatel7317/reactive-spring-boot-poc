@@ -8,6 +8,7 @@ public enum ErrorAttributesKey {
     MESSAGE("error");
 
     private final String key;
+
     ErrorAttributesKey(String key) {
         this.key = key;
     }

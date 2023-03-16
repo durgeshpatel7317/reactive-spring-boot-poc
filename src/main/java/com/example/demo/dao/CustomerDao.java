@@ -13,29 +13,30 @@ import java.util.stream.IntStream;
 @Repository
 public class CustomerDao {
 
-    private static void sleepExecution (int i) {
+    private static void sleepExecution(int i) {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
+
     public List<Customer> getCustomers() {
         return IntStream.rangeClosed(1, 10)
-                .peek(CustomerDao::sleepExecution)
-                .mapToObj(i -> new Customer(i, "Customer: " + i))
-                .collect(Collectors.toList());
+            .peek(CustomerDao::sleepExecution)
+            .mapToObj(i -> new Customer(i, "Customer: " + i))
+            .collect(Collectors.toList());
     }
 
     // Reactive approach for getting the customers
     public Flux<Customer> getCustomersReactive() {
         return Flux.range(1, 10)
-                .delayElements(Duration.of(1, ChronoUnit.SECONDS))
-                .map(i -> new Customer(i, "Customer: " + i));
+            .delayElements(Duration.of(1, ChronoUnit.SECONDS))
+            .map(i -> new Customer(i, "Customer: " + i));
     }
 
     public Flux<Customer> getCustomersFunctional() {
         return Flux.range(1, 50)
-                .map(i -> new Customer(i, "Customer: " + i));
+            .map(i -> new Customer(i, "Customer: " + i));
     }
 }

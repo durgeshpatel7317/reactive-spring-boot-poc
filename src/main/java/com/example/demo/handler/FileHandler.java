@@ -21,8 +21,8 @@ public class FileHandler {
     public Mono<ServerResponse> getDataFromJsonFile(ServerRequest request) {
         Flux<PostDto> response = fileService.getAllPosts();
         return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(response, PostDto.class);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, PostDto.class);
     }
 
     public Mono<ServerResponse> writeDateToFile(ServerRequest request) {

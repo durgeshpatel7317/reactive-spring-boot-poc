@@ -20,7 +20,7 @@ public class CustomerStreamHandler {
 
     public Mono<ServerResponse> loadCustomers(ServerRequest request) {
         return ServerResponse.ok()
-                .contentType(MediaType.TEXT_EVENT_STREAM)
-                .body(customerDao.getCustomersReactive(), Customer.class);
+            .contentType(MediaType.TEXT_EVENT_STREAM)
+            .body(customerDao.getCustomersReactive(), Customer.class);
     }
 }

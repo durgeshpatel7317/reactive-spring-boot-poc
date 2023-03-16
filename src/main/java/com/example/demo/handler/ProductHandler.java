@@ -23,8 +23,8 @@ public class ProductHandler {
     public Mono<ServerResponse> getProductById(ServerRequest request) {
         String id = request.pathVariable("id");
         Mono<ProductDto> productDtoMono = productService.getProduct(id)
-                .doOnNext(e -> log.info("Found product is {}", e))
-                .switchIfEmpty(Mono.error(new ProductNotFound("Product not found with id " + id)));
+            .doOnNext(e -> log.info("Found product is {}", e))
+            .switchIfEmpty(Mono.error(new ProductNotFound("Product not found with id " + id)));
         return ServerResponse.ok().body(productDtoMono, ProductDto.class);
     }
 }

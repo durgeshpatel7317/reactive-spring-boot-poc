@@ -21,8 +21,8 @@ import java.util.Optional;
 @Component
 public class ReactiveErrorAttributes extends DefaultErrorAttributes {
     private final List<ExceptionRule> exceptionsRules = List.of(
-            new ExceptionRule(ProductNotFound.class, HttpStatus.BAD_REQUEST),
-            new ExceptionRule(FileNotFoundException.class, HttpStatus.BAD_REQUEST)
+        new ExceptionRule(ProductNotFound.class, HttpStatus.BAD_REQUEST),
+        new ExceptionRule(FileNotFoundException.class, HttpStatus.BAD_REQUEST)
     );
 
     @Override
@@ -31,21 +31,22 @@ public class ReactiveErrorAttributes extends DefaultErrorAttributes {
         log.error("Error on path: {} - {} ==> {}: {} ", request.method(), request.path(), error.getClass().getName(), error.getMessage());
 
         Optional<ExceptionRule> exceptionRuleOptional = exceptionsRules.stream()
-                .filter(exceptionRule -> exceptionRule.exceptionClass().isInstance(error))
-                .findFirst();
+            .filter(exceptionRule -> exceptionRule.exceptionClass().isInstance(error))
+            .findFirst();
 
         return exceptionRuleOptional.<Map<String, Object>>map(exceptionRule -> Map.of(ErrorAttributesKey.STATUS.getKey(), exceptionRule.status().value(), ErrorAttributesKey.MESSAGE.getKey(), error.getMessage()))
-                .orElse(Map.of(ErrorAttributesKey.STATUS.getKey(), determineHttpStatus(error).value(),  ErrorAttributesKey.MESSAGE.getKey(), error.getMessage()));
+            .orElse(Map.of(ErrorAttributesKey.STATUS.getKey(), determineHttpStatus(error).value(), ErrorAttributesKey.MESSAGE.getKey(), error.getMessage()));
     }
 
     private HttpStatus determineHttpStatus(Throwable error) {
         return error instanceof ResponseStatusException err ? err.getStatus() :
-                MergedAnnotations.from(error.getClass(), MergedAnnotations.SearchStrategy.TYPE_HIERARCHY)
-                        .get(ResponseStatus.class)
-                        .getValue(ErrorAttributesKey.STATUS.getKey(), HttpStatus.class)
+            MergedAnnotations.from(error.getClass(), MergedAnnotations.SearchStrategy.TYPE_HIERARCHY)
+                .get(ResponseStatus.class)
+                .getValue(ErrorAttributesKey.STATUS.getKey(), HttpStatus.class)
                 .orElse(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
 
-record ExceptionRule(Class<?> exceptionClass, HttpStatus status){}
+record ExceptionRule(Class<?> exceptionClass, HttpStatus status) {
+}

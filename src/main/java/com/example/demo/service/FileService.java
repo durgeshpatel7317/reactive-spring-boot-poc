@@ -28,48 +28,48 @@ public class FileService {
     public Flux<PostDto> getAllPosts() {
 
         Flux<Post> fileContents = Flux.using(
-                () -> {
-                    FileSystemResource fileResource = new FileSystemResource(LOCATION);
-                    return new BufferedReader(new FileReader(fileResource.getFile()));
-                },
-                reader -> {
-                    try {
-                        if (reader.ready()) {
-                            return Flux.fromIterable(new Gson().fromJson(reader, new TypeToken<List<Post>>() {
-                            }.getType()));
-                        } else {
-                            log.info("Empty file is found while reading");
-                            return Flux.empty();
-                        }
-                    } catch (IOException ex) {
-                        log.error("Error occurred while processing the file {}", ex.getMessage());
+            () -> {
+                FileSystemResource fileResource = new FileSystemResource(LOCATION);
+                return new BufferedReader(new FileReader(fileResource.getFile()));
+            },
+            reader -> {
+                try {
+                    if (reader.ready()) {
+                        return Flux.fromIterable(new Gson().fromJson(reader, new TypeToken<List<Post>>() {
+                        }.getType()));
+                    } else {
+                        log.info("Empty file is found while reading");
                         return Flux.empty();
                     }
-                },
-                reader -> {
-                    try {
-                        reader.close();
-                    } catch (IOException ex) {
-                        log.error("Error occurred while closing the file after reading is completed {}", ex.getMessage());
-                    }
+                } catch (IOException ex) {
+                    log.error("Error occurred while processing the file {}", ex.getMessage());
+                    return Flux.empty();
                 }
+            },
+            reader -> {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    log.error("Error occurred while closing the file after reading is completed {}", ex.getMessage());
+                }
+            }
         );
 
         return fileContents
-                .onErrorResume(
-                        e -> e instanceof FileNotFoundException,
-                        (e) -> {
-                            log.error("Error occurred while reading the file {}", e.getMessage());
-                            return Flux.error(new ProductNotFound("Could not found file to read data"));
-                        }
-                )
-                .map(AppUtils::postEntityToDto);
+            .onErrorResume(
+                e -> e instanceof FileNotFoundException,
+                (e) -> {
+                    log.error("Error occurred while reading the file {}", e.getMessage());
+                    return Flux.error(new ProductNotFound("Could not found file to read data"));
+                }
+            )
+            .map(AppUtils::postEntityToDto);
     }
 
     public void writeDataToFile(Flux<PostDto> postFlux) {
         Mono<List<Post>> listMono = postFlux
-                .map(AppUtils::postDtoToEntity)
-                .collectList();
+            .map(AppUtils::postDtoToEntity)
+            .collectList();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileSystemResource fileResource = new FileSystemResource(LOCATION);

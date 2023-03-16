@@ -36,7 +36,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public Mono<ProductDto> getProductById(@PathVariable("id") String id) {
         return productService.getProduct(id)
-                .switchIfEmpty(Mono.error(new ProductNotFound("Could not found the product with id " + id)));
+            .switchIfEmpty(Mono.error(new ProductNotFound("Could not found the product with id " + id)));
     }
 
     @GetMapping("/product-range")

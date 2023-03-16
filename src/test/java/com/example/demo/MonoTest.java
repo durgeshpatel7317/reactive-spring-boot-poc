@@ -9,8 +9,8 @@ public class MonoTest {
     public void testMono() {
         // Publisher
         Mono<String> name = Mono.just("Durgesh")
-                // log each of the events published by the publisher
-                .log();
+            // log each of the events published by the publisher
+            .log();
 
         // Subscribe to the events published by the publisher
         name.subscribe(System.out::println);
@@ -20,18 +20,18 @@ public class MonoTest {
     public void testMonoErrorEvents() {
         // Publisher
         Mono<?> name = Mono.just("Durgesh")
-                // throwing exception
-                .then(Mono.error(new RuntimeException("Exception occurred")))
-                // log each of the events published by the publisher
-                .log();
+            // throwing exception
+            .then(Mono.error(new RuntimeException("Exception occurred")))
+            // log each of the events published by the publisher
+            .log();
 
         // * Here onError() will be triggered
         // Subscribe to the events published by the publisher
         name.subscribe(
-                System.out::println,
-                e -> System.out.println("Error is " + e.getMessage()),
-                null,
-                s -> s.request(1)
+            System.out::println,
+            e -> System.out.println("Error is " + e.getMessage()),
+            null,
+            s -> s.request(1)
         );
     }
 }

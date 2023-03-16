@@ -25,7 +25,7 @@ public class CustomerHandler {
         int customerId = Integer.parseInt(request.pathVariable("input"));
         Mono<Customer> customer = customerDao.getCustomersFunctional()
 //                .filter(c -> c.getId().equals(customerId)).take(1).single();
-                .filter(c -> c.getId().equals(customerId)).next();
+            .filter(c -> c.getId().equals(customerId)).next();
         return ServerResponse.ok().body(customer, Customer.class);
     }
 

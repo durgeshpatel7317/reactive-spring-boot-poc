@@ -10,6 +10,6 @@ spring:
       authentication-database: admin
 server:
   port: 8080
-#  By Default the error message is not printed on console and also not included into the API response
+  #  By Default the error message is not printed on console and also not included into the API response
   error:
     include-message: always

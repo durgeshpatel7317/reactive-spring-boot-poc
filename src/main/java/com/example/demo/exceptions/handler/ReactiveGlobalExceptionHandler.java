@@ -38,7 +38,7 @@ public class ReactiveGlobalExceptionHandler extends AbstractErrorWebExceptionHan
 
         int statusCode = Integer.parseInt(errorAttributes.get(ErrorAttributesKey.STATUS.getKey()).toString());
         return ServerResponse.status(statusCode)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(errorAttributes));
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromValue(errorAttributes));
     }
 }
