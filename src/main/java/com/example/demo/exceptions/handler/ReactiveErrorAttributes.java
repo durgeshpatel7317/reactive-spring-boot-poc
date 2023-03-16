@@ -2,6 +2,7 @@ package com.example.demo.exceptions.handler;
 
 import com.example.demo.enums.ErrorAttributesKey;
 import com.example.demo.exceptions.ProductNotFound;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.core.annotation.MergedAnnotations;
@@ -11,19 +12,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class ReactiveErrorAttributes extends DefaultErrorAttributes {
     private final List<ExceptionRule> exceptionsRules = List.of(
-            new ExceptionRule(ProductNotFound.class, HttpStatus.BAD_REQUEST)
+            new ExceptionRule(ProductNotFound.class, HttpStatus.BAD_REQUEST),
+            new ExceptionRule(FileNotFoundException.class, HttpStatus.BAD_REQUEST)
     );
 
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         Throwable error = getError(request);
+        log.error("Error on path: {} - {} ==> {}: {} ", request.method(), request.path(), error.getClass().getName(), error.getMessage());
 
         Optional<ExceptionRule> exceptionRuleOptional = exceptionsRules.stream()
                 .filter(exceptionRule -> exceptionRule.exceptionClass().isInstance(error))

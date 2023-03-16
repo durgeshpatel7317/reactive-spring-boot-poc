@@ -3,12 +3,14 @@ package com.example.demo.service;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.repo.ProductRepo;
 import com.example.demo.utils.AppUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class ProductService {
     private final ProductRepo productRepo;
@@ -27,7 +29,13 @@ public class ProductService {
     }
 
     public Flux<ProductDto> getProductInRange(Double min, Double max) {
-        return productRepo.findByPriceBetween(Range.closed(min, max)).map(AppUtils::entityToDto);
+        return productRepo.findByPriceBetween(Range.closed(min, max))
+                .onBackpressureBuffer(5)
+                .map(AppUtils::entityToDto);
+
+//        resp.subscribe(new CustomSubscriber<>());
+
+//        return resp;
     }
 
     public Mono<ProductDto> saveProduct(Mono<ProductDto> productDtoMono) {

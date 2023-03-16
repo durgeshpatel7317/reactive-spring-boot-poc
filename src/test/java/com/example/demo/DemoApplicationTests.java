@@ -42,13 +42,14 @@ class DemoApplicationTests {
 		// Mocking the service layer
 		Mockito.when(productService.saveProduct(dtoMono)).thenReturn(dtoMono);
 		// Testing the APIs
-		webTestClient.post().uri("/products/")
+		Flux<ProductDto> productDtoFlux = webTestClient.post().uri("/products/")
 				.body(dtoMono, ProductDto.class)
 				.exchange()
 				.expectStatus().is2xxSuccessful()
 				.returnResult(ProductDto.class)
-				.getResponseBody()
-				.doOnNext(e -> System.out.println("Response is " + e));
+				.getResponseBody();
+
+		productDtoFlux.subscribe(e -> System.out.println("Value of return is " + e));
 	}
 
 	@Test
@@ -75,8 +76,6 @@ class DemoApplicationTests {
 				.expectStatus().is2xxSuccessful()
 				.returnResult(ProductDto.class)
 				.getResponseBody();
-
-		response.doOnNext(e -> System.out.println("Value of response is " + e));
 
 		StepVerifier.create(response)
 				.expectSubscription()

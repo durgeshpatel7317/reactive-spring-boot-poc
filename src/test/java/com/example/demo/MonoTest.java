@@ -27,6 +27,11 @@ public class MonoTest {
 
         // * Here onError() will be triggered
         // Subscribe to the events published by the publisher
-        name.subscribe(System.out::println, e -> System.out.println(e.getMessage()));
+        name.subscribe(
+                System.out::println,
+                e -> System.out.println("Error is " + e.getMessage()),
+                null,
+                s -> s.request(1)
+        );
     }
 }
