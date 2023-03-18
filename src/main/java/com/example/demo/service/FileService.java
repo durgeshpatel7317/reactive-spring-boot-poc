@@ -85,6 +85,10 @@ public class FileService {
             }
         });
 
-        writeToFile.subscribe();
+        writeToFile.subscribe(
+            null,
+            err -> log.error("Error occurred while writing data to file {}", err.getMessage()),
+            () -> log.info("Writing postDto to json file is completed")
+        );
     }
 }
