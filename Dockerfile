@@ -1,4 +1,4 @@
-FROM gradle:8.0.2-jdk17 as builder
+FROM gradle:8.0.2-jdk-focal as builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY ./src /app/src
 
 RUN ./gradlew clean build
 
-FROM gradle:8.0.2-jdk17
+FROM eclipse-temurin:17-jdk-focal
 
 WORKDIR /app
 
