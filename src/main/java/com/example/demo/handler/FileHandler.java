@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @Service
 public class FileHandler {
 
@@ -27,7 +29,10 @@ public class FileHandler {
 
     public Mono<ServerResponse> writeDateToFile(ServerRequest request) {
         Flux<PostDto> body = request.bodyToFlux(PostDto.class);
-        fileService.writeDataToFile(body);
-        return ServerResponse.accepted().body(Flux.empty(), Void.class);
+
+        return fileService.writeDataToFile(body)
+            .then(ServerResponse.accepted()
+                .body(Mono.just(Map.of("message", "Data will be written to the file...!")), Map.class)
+            );
     }
 }

@@ -66,29 +66,24 @@ public class FileService {
             .map(AppUtils::postEntityToDto);
     }
 
-    public void writeDataToFile(Flux<PostDto> postFlux) {
+    public Mono<Object> writeDataToFile(Flux<PostDto> postFlux) {
         Mono<List<Post>> listMono = postFlux
             .map(AppUtils::postDtoToEntity)
             .collectList();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileSystemResource fileResource = new FileSystemResource(LOCATION);
-        Mono<Void> writeToFile = listMono.flatMap(jsonArray -> {
-            try {
-                FileWriter writer = new FileWriter(fileResource.getFile());
-                gson.toJson(jsonArray, writer);
-                writer.flush();
-                writer.close();
-                return Mono.empty();
-            } catch (IOException e) {
-                return Mono.error(new FileNotFoundException(e.getMessage()));
-            }
-        });
-
-        writeToFile.subscribe(
-            null,
-            err -> log.error("Error occurred while writing data to file {}", err.getMessage()),
-            () -> log.info("Writing postDto to json file is completed")
-        );
+        return listMono.flatMap(jsonArray -> {
+                try {
+                    FileWriter writer = new FileWriter(fileResource.getFile());
+                    gson.toJson(jsonArray, writer);
+                    writer.flush();
+                    writer.close();
+                    return Mono.empty();
+                } catch (IOException e) {
+                    return Mono.error(new FileNotFoundException(e.getMessage()));
+                }
+            })
+            .doOnError(err -> log.error("Error occurred while writing data to file {}", err.getMessage()));
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.router;
 import com.example.demo.handler.CustomerHandler;
 import com.example.demo.handler.CustomerStreamHandler;
 import com.example.demo.handler.FileHandler;
+import com.example.demo.handler.KafkaHandler;
 import com.example.demo.handler.ProductHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,16 +18,18 @@ public class RouterConfig {
     private final CustomerHandler customerHandler;
     private final CustomerStreamHandler customerStreamHandler;
     private final ProductHandler productHandler;
+    private final KafkaHandler kafkaHandler;
     private final FileHandler fileHandler;
 
     @Autowired
     public RouterConfig(
         CustomerHandler customerHandler, CustomerStreamHandler customerStreamHandler,
-        ProductHandler productHandler, FileHandler fileHandler
+        ProductHandler productHandler, KafkaHandler kafkaHandler, FileHandler fileHandler
     ) {
         this.customerHandler = customerHandler;
         this.customerStreamHandler = customerStreamHandler;
         this.productHandler = productHandler;
+        this.kafkaHandler = kafkaHandler;
         this.fileHandler = fileHandler;
     }
 
@@ -55,6 +58,7 @@ public class RouterConfig {
         return RouterFunctions.route()
             .GET("/router/file/posts", fileHandler::getDataFromJsonFile)
             .POST("/router/file/posts", fileHandler::writeDateToFile)
+            .POST("/router/publish/kafka", kafkaHandler::publishMessageToKafkaTopic)
             .build();
     }
 }

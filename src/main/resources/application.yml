@@ -1,4 +1,6 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:29092
   data:
     mongodb:
       database: productsdb
@@ -13,3 +15,8 @@ server:
   #  By Default the error message is not printed on console and also not included into the API response
   error:
     include-message: always
+
+logging:
+  level:
+    com.example:
+      demo: DEBUG
