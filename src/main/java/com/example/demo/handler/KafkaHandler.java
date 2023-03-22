@@ -30,7 +30,7 @@ public class KafkaHandler {
             .map(gson::toJson);
 
         return
-            kafkaProducer.sendMessage("test", postDtoFluxString)
+            kafkaProducer.sendMessage("posts", postDtoFluxString)
                 .then(ServerResponse.accepted()
                     .body(Mono.just(Map.of("message", "Data will be published to kafka...!")), Map.class)
                 );

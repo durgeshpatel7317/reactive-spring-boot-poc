@@ -22,7 +22,7 @@ public class KafkaConsumer {
     @EventListener(ApplicationStartedEvent.class)
     public void consumeMessages() {
         ReceiverOptions<String, String> options = receiverOptions
-            .subscription(Collections.singletonList("test"))
+            .subscription(Collections.singletonList("posts"))
             .addAssignListener(partitions -> log.debug("onPartitionsAssigned {}", partitions))
             .addRevokeListener(partitions -> log.debug("onPartitionsRevoked {}", partitions));
 

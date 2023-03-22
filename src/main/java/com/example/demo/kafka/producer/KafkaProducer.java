@@ -10,6 +10,8 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderRecord;
 import reactor.kafka.sender.SenderResult;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Slf4j
 @Component
 public class KafkaProducer {
@@ -21,8 +23,9 @@ public class KafkaProducer {
     }
 
     public Flux<SenderResult<String>> sendMessage(String topic, Flux<String> message) {
+        AtomicInteger atmInt = new AtomicInteger();
         return sender.send(
-                message.map(m -> SenderRecord.create(new ProducerRecord<>(topic, "Message_" + m, m), m))
+                message.map(m -> SenderRecord.create(new ProducerRecord<>(topic, "Message_" + atmInt.incrementAndGet(), m), m))
             )
             .doOnError(err -> log.error("Error while publishing the message {}", err.getMessage()))
             .doOnNext(event -> {
