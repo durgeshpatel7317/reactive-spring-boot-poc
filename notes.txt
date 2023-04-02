@@ -1,0 +1,15 @@
+When using Spring Boot Reactive WebClient in a web application, it's important to properly handle errors that may occur during the course of the request. Here are some tips for effective error handling in Spring Boot Reactive WebClient:
+
+Use try-catch blocks: Surround the WebClient call with a try-catch block to catch any exceptions that might be thrown.
+
+Use onErrorResume or onErrorReturn methods: These methods can be used to handle errors returned by the WebClient. They can be used to provide default values or to handle the error in a custom way.
+
+Use the status code: The HTTP response status code can provide important information about the success or failure of the request. Check the status code of the response object returned by the WebClient call to determine whether the request was successful or not. Common status codes include 200 (OK), 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), and 500 (Internal Server Error).
+
+Use the exchange method: The exchange method of the WebClient allows you to access the full response, including headers and body. This can be useful for handling errors that are not returned as HTTP status codes.
+
+Use an error handling middleware: You can use a middleware such as the Spring Boot WebFlux ErrorWebExceptionHandler to centralize your error handling and log exceptions.
+
+Log errors: Logging errors can help you diagnose and fix issues with your application. Use a logging framework like Logback or Log4j2 to log errors.
+
+Display user-friendly error messages: If an error occurs during the course of a user's request, provide them with a user-friendly error message that explains what went wrong and how they can fix it.

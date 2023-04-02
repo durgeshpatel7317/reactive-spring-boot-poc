@@ -10,6 +10,10 @@ spring:
       password: test
       auto-index-creation: true
       authentication-database: admin
+  devtools:
+    restart:
+      poll-interval: 1200ms
+      quiet-period: 600ms
 server:
   port: 8080
   #  By Default the error message is not printed on console and also not included into the API response
